@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
+import VictoryModal from './VictoryModal';
+import { useVictoryCheck } from '../hooks/useVictoryCheck';
+import { loadHallOfHeroes, saveHallOfHeroes } from '../utils/hallOfHeroes';
 import { Tooltip, Typography } from '@mui/material';
 import { isPrime, shuffleArray } from '../utils/color';
 import ScoreBar from './ScoreBar';
@@ -18,6 +21,8 @@ const COLS = 7;
 const TOTAL = ROWS * COLS;
 
 const GameScreen = ({ palette }: GameScreenProps) => {
+    const [showVictoryModal, setShowVictoryModal] = useState(false);
+    const [victoryPlace, setVictoryPlace] = useState<number | null>(null);
     const [clickTimestamps, setClickTimestamps] = useState<number[]>([]);
     const [ragePopup, setRagePopup] = useState(false);
     const [interactionDisabled, setInteractionDisabled] = useState(false);
@@ -31,7 +36,19 @@ const GameScreen = ({ palette }: GameScreenProps) => {
         isActive: (i + 1) % 2 === 0,           // Even-numbered IDs = active
         }))
     );
-
+    const onVictory = useCallback((place: number) => {
+        setVictoryPlace(place);
+        setShowVictoryModal(true);
+      }, []);
+      
+      useVictoryCheck({
+        buttons,
+        playerMoves,
+        envMoves,
+        onVictory,
+      });
+   
+      
     const handleEqualizerClick = () => {
         if (interactionDisabled) return;
       
@@ -133,6 +150,17 @@ const GameScreen = ({ palette }: GameScreenProps) => {
         return Math.max(countActive, countInactive);
     };
 
+    const handleSaveName = (name: string) => {
+        const current = loadHallOfHeroes();
+        const unnamedIndex = current.findIndex((e) => e.name === '');
+        if (unnamedIndex !== -1) {
+          current[unnamedIndex].name = name;
+          saveHallOfHeroes(current);
+        }
+        setShowVictoryModal(false);
+        setVictoryPlace(null);
+      };
+
     return (
         <div
         className="game-screen-wrapper"
@@ -185,6 +213,12 @@ const GameScreen = ({ palette }: GameScreenProps) => {
             </Tooltip>
             ))}
         </div>
+        {showVictoryModal && victoryPlace && (
+        <VictoryModal
+          place={victoryPlace}
+          onSave={handleSaveName}
+        />
+      )}
         </div>
     );
 };

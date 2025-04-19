@@ -1,0 +1,89 @@
+.victory-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+  
+  .victory-modal {
+    background-color: #1a1a1a;
+    color: #fff;
+    padding: 2rem 3rem;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  .victory-modal h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #ffd700;
+  }
+  
+  .victory-modal p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  
+  .arcade-input {
+    font-size: 2rem;
+    width: 130px;
+    padding: 0.5rem;
+    margin: 1rem 0;
+    text-align: center;
+    letter-spacing: 0.6rem;
+    border: 2px solid #fff;
+    background-color: #000;
+    color: #0f0;
+    text-transform: uppercase;
+    outline: none;
+    animation: blink-underscore 1s infinite;
+  }
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .modal-buttons button {
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    background-color: #ffd700;
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .modal-buttons button:hover {
+    background-color: #fff;
+  }
+  
+  .modal-buttons button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+  
+  /* Blinking cursor effect */
+  @keyframes blink-underscore {
+    0%, 100% {
+      border-bottom: 2px solid #0f0;
+    }
+    50% {
+      border-bottom: 2px solid transparent;
+    }
+  }
+  
