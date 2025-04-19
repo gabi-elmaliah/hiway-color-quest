@@ -8,25 +8,32 @@ interface GameScreenProps {
   palette: [string, string]; // [inactiveColor, activeColor]
 }
 
+type ButtonData = {
+  id: number;        // 1–42
+  isActive: boolean;
+};
+
 const ROWS = 6;
 const COLS = 7;
 const TOTAL = ROWS * COLS;
 
 const GameScreen = ({ palette }: GameScreenProps) => {
-  const [order, setOrder] = useState<number[]>(
-    Array.from({ length: TOTAL }, (_, i) => i)
+  const [buttons, setButtons] = useState<ButtonData[]>(
+    Array.from({ length: TOTAL }, (_, i) => ({
+      id: i + 1,                             // IDs: 1 → 42
+      isActive: (i + 1) % 2 === 0,           // Even-numbered IDs = active
+    }))
   );
-
-  const initialStates = Array.from({ length: TOTAL }, (_, i) => (i + 1) % 2 === 0);
-  const [activeStates, setActiveStates] = useState<boolean[]>(initialStates);
+  const [envMoves, setEnvMoves] = useState<number>(0);
   const [timeLeft, setTimeLeft] = useState<number>(42);
   const [playerMoves, setPlayerMoves] = useState<number>(0);
 
-  // 🕒 Shuffle and countdown intervals
+  // ⏱ Auto-shuffle + countdown
   useEffect(() => {
     const shuffleInterval = setInterval(() => {
-      setOrder((prevOrder) => shuffleArray(prevOrder));
+      setButtons((prev) => shuffleArray(prev));
       setTimeLeft(42);
+      setEnvMoves((prev) => prev + 1);
     }, 42000);
 
     const countdownInterval = setInterval(() => {
@@ -39,13 +46,20 @@ const GameScreen = ({ palette }: GameScreenProps) => {
     };
   }, []);
 
+  // Toggle visual button + its neighbors
   const toggleIndex = (visualIndex: number) => {
     setPlayerMoves((moves) => moves + 1);
 
-    setActiveStates((prev) => {
+    setButtons((prev) => {
       const next = [...prev];
+
       const toggle = (i: number) => {
-        if (i >= 0 && i < TOTAL) next[i] = !next[i];
+        if (i >= 0 && i < TOTAL) {
+          next[i] = {
+            ...next[i],
+            isActive: !next[i].isActive,
+          };
+        }
       };
 
       toggle(visualIndex);
@@ -53,16 +67,16 @@ const GameScreen = ({ palette }: GameScreenProps) => {
       const row = Math.floor(visualIndex / COLS);
       const col = visualIndex % COLS;
 
-      if ((visualIndex + 1) % 2 === 0) {
-        if (col > 0) toggle(visualIndex - 1); // left
-        if (col < COLS - 1) toggle(visualIndex + 1); // right
-        if (row > 0) toggle(visualIndex - COLS); // up
-        if (row < ROWS - 1) toggle(visualIndex + COLS); // down
+      if ((next[visualIndex].id) % 2 === 0) {
+        if (col > 0) toggle(visualIndex - 1);
+        if (col < COLS - 1) toggle(visualIndex + 1);
+        if (row > 0) toggle(visualIndex - COLS);
+        if (row < ROWS - 1) toggle(visualIndex + COLS);
       } else {
-        if (row > 0 && col > 0) toggle(visualIndex - COLS - 1); // top-left
-        if (row > 0 && col < COLS - 1) toggle(visualIndex - COLS + 1); // top-right
-        if (row < ROWS - 1 && col > 0) toggle(visualIndex + COLS - 1); // bottom-left
-        if (row < ROWS - 1 && col < COLS - 1) toggle(visualIndex + COLS + 1); // bottom-right
+        if (row > 0 && col > 0) toggle(visualIndex - COLS - 1);
+        if (row > 0 && col < COLS - 1) toggle(visualIndex - COLS + 1);
+        if (row < ROWS - 1 && col > 0) toggle(visualIndex + COLS - 1);
+        if (row < ROWS - 1 && col < COLS - 1) toggle(visualIndex + COLS + 1);
       }
 
       return next;
@@ -70,9 +84,9 @@ const GameScreen = ({ palette }: GameScreenProps) => {
   };
 
   const getScore = () => {
-    const countTrue = activeStates.filter((val) => val === true).length;
-    const countFalse = TOTAL - countTrue;
-    return Math.max(countTrue, countFalse);
+    const countActive = buttons.filter((b) => b.isActive).length;
+    const countInactive = TOTAL - countActive;
+    return Math.max(countActive, countInactive);
   };
 
   return (
@@ -86,32 +100,28 @@ const GameScreen = ({ palette }: GameScreenProps) => {
       }
     >
       <ScoreBar score={getScore()} moves={playerMoves} total={TOTAL} />
-      <Typography variant="body1" className="shuffle-timer">
-        🔁 Next shuffle in: {timeLeft}s
-      </Typography>
+
+      <Typography variant="body1" className="shuffle-timer">Next shuffle in: {timeLeft}s</Typography>
+      <Typography variant="body1" className="env-moves">Environment Moves: {envMoves}</Typography>
 
       <div className="game-screen">
-        {order.map((originalIndex, visualIndex) => {
-          const isActive = activeStates[originalIndex];
-
-          return (
-            <Tooltip
-              key={originalIndex}
-              title={
-                isPrime(originalIndex + 1)
-                  ? 'Prime'
-                  : 'Not Prime (How boring!)'
-              }
+        {buttons.map((button, visualIndex) => (
+          <Tooltip
+            key={button.id}
+            title={
+              isPrime(button.id)
+                ? 'Prime'
+                : 'Not Prime (How boring!)'
+            }
+          >
+            <button
+              className={`grid-button ${button.isActive ? 'active' : 'inactive'}`}
+              onClick={() => toggleIndex(visualIndex)}
             >
-              <button
-                className={`grid-button ${isActive ? 'active' : 'inactive'}`}
-                onClick={() => toggleIndex(visualIndex)}
-              >
-                {originalIndex + 1}
-              </button>
-            </Tooltip>
-          );
-        })}
+              {button.id}
+            </button>
+          </Tooltip>
+        ))}
       </div>
     </div>
   );

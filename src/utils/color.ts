@@ -1,3 +1,5 @@
+
+
 export function getRandomHexColor(): string {
     const hex = Math.floor(Math.random() * 0xffffff)
       .toString(16)
@@ -15,7 +17,7 @@ export function getRandomHexColor(): string {
   }
 
   
-export const shuffleArray = (array: number[]): number[] => {
+export const shuffleArray = <T>(array: T[]): T[] => {
     const copy = [...array];
     for (let i = copy.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
