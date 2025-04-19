@@ -6,3 +6,11 @@ export function getRandomHexColor(): string {
   
     return hex;
   }
+
+  export function isPrime(n: number, i: number = 2): boolean {
+    if (n <= 1) return false;
+    if (i * i > n) return true;
+    if (n % i === 0) return false;
+    return isPrime(n, i + 1);
+  }
+  
