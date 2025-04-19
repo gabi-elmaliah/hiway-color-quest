@@ -18,6 +18,8 @@ const COLS = 7;
 const TOTAL = ROWS * COLS;
 
 const GameScreen = ({ palette }: GameScreenProps) => {
+    const [clickTimestamps, setClickTimestamps] = useState<number[]>([]);
+    const [ragePopup, setRagePopup] = useState(false);
     const [interactionDisabled, setInteractionDisabled] = useState(false);
     const [showEqualizerPopup, setShowEqualizerPopup] = useState(false);
     const [envMoves, setEnvMoves] = useState<number>(0);
@@ -70,6 +72,26 @@ const GameScreen = ({ palette }: GameScreenProps) => {
     // Toggle visual button + its neighbors
     const toggleIndex = (visualIndex: number) => {
         if (interactionDisabled) return;
+
+        const now = Date.now();
+        setClickTimestamps((prev) => {
+          const recent = prev.filter((ts) => now - ts <= 2000); // keep only clicks within 2s
+          const updated = [...recent, now];
+      
+          if (updated.length >= 5) {
+            setInteractionDisabled(true);
+            setRagePopup(true);
+      
+            setTimeout(() => {
+              setInteractionDisabled(false);
+              setRagePopup(false);
+            }, 1618); // golden ratio seconds in ms
+      
+            return []; // reset click tracking after rage-lock
+          }
+      
+          return updated;
+        });
         setPlayerMoves((moves) => moves + 1);
 
         setButtons((prev) => {
@@ -134,8 +156,14 @@ const GameScreen = ({ palette }: GameScreenProps) => {
             <div className="popup-message">
                 You invoked balance in the universe. Sit and ponder your actions!
             </div>
-  )}
-</div>
+         )}
+            {ragePopup && (
+            <div className="popup-message">
+                Slow down, Speedy! Even wizards must rest!
+            </div>
+            )}
+            
+        </div>
 
 
         <div className="game-screen">

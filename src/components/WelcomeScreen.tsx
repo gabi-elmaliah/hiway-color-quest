@@ -20,6 +20,7 @@ const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
     for (let i = 0; i < 3; i++) {
       const randomHex = getRandomHexColor(); 
       const url = `${COLOR_API_BASE}?hex=${randomHex}&mode=complement&count=2`;
+      // TODO: add exception handling in case we get an error from the API
       const response = await fetch(url);
       const data = await response.json();
 
