@@ -1,0 +1,26 @@
+.score-bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .score-bar {
+    text-align: center;
+    font-size: 1.1rem;
+  }
+  
+  .victory-message {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: gold;
+    margin-top: 0.5rem;
+  }
+  
+  @media (max-width: 600px) {
+    .victory-message {
+      font-size: 1.1rem;
+    }
+  }
+  

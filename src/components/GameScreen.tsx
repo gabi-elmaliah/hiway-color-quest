@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Grid, Button,Tooltip } from '@mui/material';   
-import { isPrime } from '../utils/color'; // utility function to check if a number is prime
+import React, { useState, useEffect } from 'react';
+import { Tooltip, Typography } from '@mui/material';
+import { isPrime, shuffleArray } from '../utils/color';
+import ScoreBar from './ScoreBar';
 import '../styles/GameScreen.css';
 
 interface GameScreenProps {
@@ -11,52 +12,68 @@ const ROWS = 6;
 const COLS = 7;
 const TOTAL = ROWS * COLS;
 
-
 const GameScreen = ({ palette }: GameScreenProps) => {
-    const initialStates = Array.from({ length: TOTAL }, (_, i) => (i + 1) % 2 === 0);
-    const [activeStates, setActiveStates] = useState<boolean[]>(initialStates);
-    const [playerMoves, setPlayerMoves] = useState<number>(0);
+  const [order, setOrder] = useState<number[]>(
+    Array.from({ length: TOTAL }, (_, i) => i)
+  );
 
-    const toggleIndex = (index: number) => 
-    {
-        setPlayerMoves((moves) => moves + 1); // Increment player moves
+  const initialStates = Array.from({ length: TOTAL }, (_, i) => (i + 1) % 2 === 0);
+  const [activeStates, setActiveStates] = useState<boolean[]>(initialStates);
+  const [timeLeft, setTimeLeft] = useState<number>(42);
+  const [playerMoves, setPlayerMoves] = useState<number>(0);
 
-        setActiveStates((prev) => {
-        const next = [...prev];
-        const toggle = (i: number) => {
-            if (i >= 0 && i < TOTAL) next[i] = !next[i];
-        };
+  // 🕒 Shuffle and countdown intervals
+  useEffect(() => {
+    const shuffleInterval = setInterval(() => {
+      setOrder((prevOrder) => shuffleArray(prevOrder));
+      setTimeLeft(42);
+    }, 42000);
 
-        // Self
-        toggle(index);
+    const countdownInterval = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
 
-        const row = Math.floor(index / COLS);
-        const col = index % COLS;
+    return () => {
+      clearInterval(shuffleInterval);
+      clearInterval(countdownInterval);
+    };
+  }, []);
 
-        if ((index + 1) % 2 === 0) {
-            // Even: toggle direct neighbors
-            if (col > 0) toggle(index - 1); // left
-            if (col < COLS - 1) toggle(index + 1); // right
-            if (row > 0) toggle(index - COLS); // up
-            if (row < ROWS - 1) toggle(index + COLS); // down
-        } else {
-            // Odd: toggle diagonal neighbors
-            if (row > 0 && col > 0) toggle(index - COLS - 1); // top-left
-            if (row > 0 && col < COLS - 1) toggle(index - COLS + 1); // top-right
-            if (row < ROWS - 1 && col > 0) toggle(index + COLS - 1); // bottom-left
-            if (row < ROWS - 1 && col < COLS - 1) toggle(index + COLS + 1); // bottom-right
-        }
+  const toggleIndex = (visualIndex: number) => {
+    setPlayerMoves((moves) => moves + 1);
 
-        return next;
+    setActiveStates((prev) => {
+      const next = [...prev];
+      const toggle = (i: number) => {
+        if (i >= 0 && i < TOTAL) next[i] = !next[i];
+      };
+
+      toggle(visualIndex);
+
+      const row = Math.floor(visualIndex / COLS);
+      const col = visualIndex % COLS;
+
+      if ((visualIndex + 1) % 2 === 0) {
+        if (col > 0) toggle(visualIndex - 1); // left
+        if (col < COLS - 1) toggle(visualIndex + 1); // right
+        if (row > 0) toggle(visualIndex - COLS); // up
+        if (row < ROWS - 1) toggle(visualIndex + COLS); // down
+      } else {
+        if (row > 0 && col > 0) toggle(visualIndex - COLS - 1); // top-left
+        if (row > 0 && col < COLS - 1) toggle(visualIndex - COLS + 1); // top-right
+        if (row < ROWS - 1 && col > 0) toggle(visualIndex + COLS - 1); // bottom-left
+        if (row < ROWS - 1 && col < COLS - 1) toggle(visualIndex + COLS + 1); // bottom-right
+      }
+
+      return next;
     });
   };
-  // Calcukate the the current score
+
   const getScore = () => {
     const countTrue = activeStates.filter((val) => val === true).length;
     const countFalse = TOTAL - countTrue;
     return Math.max(countTrue, countFalse);
   };
-
 
   return (
     <div
@@ -68,39 +85,36 @@ const GameScreen = ({ palette }: GameScreenProps) => {
         } as React.CSSProperties
       }
     >
-      {/* Score and move counter */}
-      <div className="score-bar">
-        <p><strong>Score:</strong> {getScore()}</p>
-        <p><strong>Player Moves:</strong> {playerMoves}</p>
-      </div>
-  
-      {/* Victory message */}
-      {getScore() === TOTAL && (
-        <div className="victory-message">
-          🎉 Victory! All buttons match!
-        </div>
-      )}
-  
+      <ScoreBar score={getScore()} moves={playerMoves} total={TOTAL} />
+      <Typography variant="body1" className="shuffle-timer">
+        🔁 Next shuffle in: {timeLeft}s
+      </Typography>
+
       <div className="game-screen">
-        {activeStates.map((isActive, index) => (
-          <Tooltip
-            key={index}
-            title={isPrime(index + 1) ? "Prime" : "Not Prime (How boring!)"}
-          >
-            <button
-              className={`grid-button ${isActive ? 'active' : 'inactive'}`}
-              onClick={() => toggleIndex(index)}
+        {order.map((originalIndex, visualIndex) => {
+          const isActive = activeStates[originalIndex];
+
+          return (
+            <Tooltip
+              key={originalIndex}
+              title={
+                isPrime(originalIndex + 1)
+                  ? 'Prime'
+                  : 'Not Prime (How boring!)'
+              }
             >
-              {index + 1}
-            </button>
-          </Tooltip>
-        ))}
+              <button
+                className={`grid-button ${isActive ? 'active' : 'inactive'}`}
+                onClick={() => toggleIndex(visualIndex)}
+              >
+                {originalIndex + 1}
+              </button>
+            </Tooltip>
+          );
+        })}
       </div>
     </div>
   );
 };
 
-  
-  
-  
 export default GameScreen;

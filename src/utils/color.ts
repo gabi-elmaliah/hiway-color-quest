@@ -13,4 +13,15 @@ export function getRandomHexColor(): string {
     if (n % i === 0) return false;
     return isPrime(n, i + 1);
   }
+
+  
+export const shuffleArray = (array: number[]): number[] => {
+    const copy = [...array];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  };
+  
   
