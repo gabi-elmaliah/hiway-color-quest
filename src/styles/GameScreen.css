@@ -8,7 +8,7 @@
 
   
   /* Main button grid */
-  .game-screen {
+.game-screen {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr)); /* 7 responsive columns */
     gap: 10px;
@@ -18,7 +18,7 @@
   }
   
   /* Square, fluid buttons */
-  .grid-button {
+.grid-button {
     width: 100%;
     aspect-ratio: 1; /* Keep buttons square */
     font-size: 1rem;
@@ -31,21 +31,50 @@
   }
   
   /* Hover effect */
-  .grid-button:hover {
+.grid-button:hover {
     transform: scale(1.05);
   }
   
   /* Color states */
-  .grid-button.active {
+.grid-button.active {
     background-color: var(--active-color);
-  }
+  } 
   
-  .grid-button.inactive {
+.grid-button.inactive {
     background-color: var(--inactive-color);
   }
+.great-equalizer {
+    animation: pulse 2s infinite;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background-color: #ffc107;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+.popup-message {
+    margin-top: 8px;
+    font-weight: bold;
+    color: #f44336;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+  
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  
   
   /* 🔄 Responsive tweaks for small screens */
-  @media (max-width: 600px) {
+@media (max-width: 600px) {
     .grid-button {
       font-size: 0.75rem;
     }
