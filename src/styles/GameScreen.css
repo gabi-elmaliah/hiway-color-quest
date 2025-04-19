@@ -1,0 +1,16 @@
+.grid-button {
+    width: 50px;
+    height: 50px;
+    min-width: 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+  }
+
+  /* Optional: subtle hover animation */
+.grid-button:hover {
+    transform: scale(1.05);
+  }
