@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './VictoryModal.css';
 
 type VictoryModalProps = {
@@ -8,6 +9,7 @@ type VictoryModalProps = {
 
 const VictoryModal = ({ place, onSave, }: VictoryModalProps) => {
   const [name, setName] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toUpperCase().slice(0, 3);
@@ -17,6 +19,7 @@ const VictoryModal = ({ place, onSave, }: VictoryModalProps) => {
   const handleSubmit = () => {
     if (name.length === 3) {
       onSave(name);
+      navigate('/');
     }
   };
 
