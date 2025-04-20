@@ -54,10 +54,12 @@ const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
 
   return (
     <Grid container spacing={2} direction="column" alignItems="center">
-      {/* Title */}
     
+        <Typography variant="h1" className="logo-emoji">
+         🎨
+        </Typography>
         <Typography variant="h3" gutterBottom>
-          🎨 Start Your Adventure
+          Start Your Adventure
         </Typography>
   
         <Grid container spacing={2} justifyContent="center">

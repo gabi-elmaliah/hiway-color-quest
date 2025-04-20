@@ -180,19 +180,6 @@ const GameScreen = ({ palette }: GameScreenProps) => {
         ))}
       </div>
 
-      {/* Force Win (for development only) */}
-      {import.meta.env.MODE === 'development' && (
-        <button
-          className="great-equalizer"
-          style={{ marginTop: '2rem' }}
-          onClick={() =>
-            setButtons((prev) => prev.map((b) => ({ ...b, isActive: true })))
-          }
-        >
-          🧪 Force Win (DEV)
-        </button>
-      )}
-
       {/* Victory Modal */}
       {showVictoryModal && (
         <VictoryModal

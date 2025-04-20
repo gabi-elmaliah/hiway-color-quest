@@ -5,6 +5,20 @@
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
   }
+.logo-emoji {
+    font-size: 4rem;
+    animation: bounce 1.5s infinite;
+    margin-bottom: 0.5rem;
+  }
+  
+@keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
 
 .palette-card:hover {
     transform: scale(1.05);

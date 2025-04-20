@@ -12,6 +12,17 @@ type UseEqualizerParams = {
   setShowEqualizerPopup: (show: boolean) => void;
 };
 
+/**
+ * Custom hook that returns a function to activate "The Great Equalizer" feature.
+ * This rearranges all even-ID buttons to the start and odd-ID buttons to the end,
+ * temporarily disabling user interaction and showing a popup.
+ *
+ * @param setButtons - State updater to rearrange the button order.
+ * @param setEnvMoves - Increments environment move counter.
+ * @param setInteractionDisabled - Disables user interactions temporarily.
+ * @param setShowEqualizerPopup - Shows/hides a popup explaining the effect.
+ * @returns A callback function to trigger the equalizer.
+ */
 export const useEqualizer = ({
   setButtons,
   setEnvMoves,
