@@ -16,6 +16,10 @@ const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
   const [palettes, setPalettes] = useState<Palette[]>([]);
   const navigate = useNavigate();
 
+   /**
+   * Fetch 3 complementary color palettes from the external color API.
+   * If API fails, fallback palettes are generated randomly.
+   */
   const fetchPalettes = async () => {
     const newPalettes: Palette[] = [];
   
@@ -43,7 +47,7 @@ const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
   
     setPalettes(newPalettes);
   };
-
+  // Initial fetch on mount
   useEffect(() => { 
     fetchPalettes();
   }, []);
@@ -52,9 +56,9 @@ const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
     <Grid container spacing={2} direction="column" alignItems="center">
       {/* Title */}
     
-      <Typography variant="h3" gutterBottom>
+        <Typography variant="h3" gutterBottom>
           🎨 Start Your Adventure
-      </Typography>
+        </Typography>
   
         <Grid container spacing={2} justifyContent="center">
           {palettes.map((palette, index) => (

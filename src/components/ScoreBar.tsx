@@ -7,6 +7,10 @@ interface ScoreBarProps {
   total: number;
 }
 
+/**
+ * Displays the player's current score and move count.
+ * Shows a victory message when the board is fully unified.
+ */
 const ScoreBar = ({ score, moves, total }: ScoreBarProps) => {
   return (
     <div className="score-bar-wrapper">

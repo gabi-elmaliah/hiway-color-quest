@@ -21,7 +21,8 @@ Welcome to **Color Quest**, a color-based logic puzzle game built with React + T
 
 ```bash
 git clone https://github.com/gabi-elmaliah/hiway-color-quest.git
-cd color-quest```
+cd color-quest
+```
 
 
 ### 2. Install dependencies
