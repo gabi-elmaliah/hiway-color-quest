@@ -25,7 +25,7 @@ const HallOfHeroes = () => {
 
   return (
     <Container maxWidth="md"  className="hall-container">
-      <Typography variant="h3" align="center" className="hall-title">
+      <Typography variant="h3" align="center" className="hall-title trophy-emoji">
         🏆 Hall of Heroes
       </Typography>
 
