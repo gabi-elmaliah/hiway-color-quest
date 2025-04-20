@@ -4,10 +4,17 @@ import { Box, Grid,Button, Card, CardContent, Typography, Container } from '@mui
 import { loadHallOfHeroes } from '../utils/hallOfHeroes';
 import '../styles/HallOfHeroes.css'; 
 
-
+/**
+ * HallOfHeroes Component
+ * Displays the top 10 players who completed the game with the best scores.
+ * Shows player rank, name, and their move statistics.
+ * If no heroes exist yet, displays a prompt to be the first.
+ * Includes a button to return to the Welcome screen.
+ */
 const HallOfHeroes = () => {
-  const heroes = loadHallOfHeroes();
-  const navigate = useNavigate();
+  const heroes = loadHallOfHeroes(); // Load leaderboard data from localStorage
+  const navigate = useNavigate();    
+
 
   return (
     <Container maxWidth="md"  className="hall-container">
