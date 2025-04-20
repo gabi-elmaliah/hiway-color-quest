@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import React, { useState, useCallback } from 'react';
 import { useAutoShuffle } from '../hooks/useAutoShuffle';
 import { useEqualizer } from '../hooks/useEqualizer';
@@ -50,6 +51,7 @@ const GameScreen = ({ palette }: GameScreenProps) => {
     setShowVictoryModal(true);
   }, []);
 
+  const navigate = useNavigate();
   useVictoryCheck({ buttons, playerMoves, envMoves, onVictory });
 
   // Show rage popup if player clicks too quickly
@@ -179,6 +181,13 @@ const GameScreen = ({ palette }: GameScreenProps) => {
           </Tooltip>
         ))}
       </div>
+
+      <button
+        className="great-equalizer"
+        onClick={() => navigate('/')}
+        >
+        Back to Home Page
+      </button>
 
       {/* Victory Modal */}
       {showVictoryModal && (
