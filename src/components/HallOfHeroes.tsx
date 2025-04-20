@@ -1,10 +1,13 @@
 import React from 'react';
-import { Box, Grid, Card, CardContent, Typography, Container } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Box, Grid,Button, Card, CardContent, Typography, Container } from '@mui/material';
 import { loadHallOfHeroes } from '../utils/hallOfHeroes';
+import '../styles/HallOfHeroes.css'; 
 
 
 const HallOfHeroes = () => {
   const heroes = loadHallOfHeroes();
+  const navigate = useNavigate();
 
   return (
     <Container maxWidth="md" className="hall-container">
@@ -37,6 +40,15 @@ const HallOfHeroes = () => {
           ))}
         </Grid>
       )}
+      <Box display="flex" justifyContent="center" mt={4}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate('/')}
+        >
+           Back to Home Screen
+        </Button>
+      </Box>
     </Container>
   );
 };

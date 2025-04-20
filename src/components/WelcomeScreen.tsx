@@ -31,6 +31,8 @@ const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
   
         const data = await response.json();
         const colors = data.colors.map((c: any) => c.hex.value);
+
+        newPalettes.push([colors[0], colors[1]]);
   
   
       } catch (error) {
