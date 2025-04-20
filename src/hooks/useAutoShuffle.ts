@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { shuffleArray } from '../utils/color';
+import { shuffleArray } from '../utils/helpers';
 
 export const useAutoShuffle = (
   setButtons: React.Dispatch<React.SetStateAction<any[]>>,

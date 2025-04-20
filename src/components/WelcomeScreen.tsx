@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getRandomHexColor } from '../utils/color'; // utility function to generate random hex color
+import { getRandomHexColor } from '../utils/helpers'; // utility function to generate random hex color
 import { Button,Grid,Typography, Card, CardContent } from '@mui/material';
 import '../styles/WelcomeScreen.css';
 const COLOR_API_BASE = "https://www.thecolorapi.com/scheme";

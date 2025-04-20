@@ -10,7 +10,7 @@ const HallOfHeroes = () => {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="md" className="hall-container">
+    <Container maxWidth="md"  className="hall-container">
       <Typography variant="h3" align="center" className="hall-title">
         🏆 Hall of Heroes
       </Typography>
@@ -20,7 +20,7 @@ const HallOfHeroes = () => {
           No heroes yet. Be the first to inscribe your name!
         </Typography>
       ) : (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} justifyContent="center">
           {heroes.map((hero, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card className="hero-card">

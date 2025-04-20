@@ -1,9 +1,12 @@
 import React, { useState, useEffect,useCallback } from 'react';
-import VictoryModal from './VictoryModal';
+import { useAutoShuffle } from '../hooks/useAutoShuffle';
+import { useEqualizer } from '../hooks/useEqualizer';
+import { useRageClickDetector } from '../hooks/useRageClickDetector';
 import { useVictoryCheck } from '../hooks/useVictoryCheck';
+import VictoryModal from './VictoryModal';
 import { loadHallOfHeroes, saveHallOfHeroes } from '../utils/hallOfHeroes';
 import { Tooltip, Typography } from '@mui/material';
-import { isPrime, shuffleArray } from '../utils/color';
+import { isPrime, getScore,getNeighborIndexes } from '../utils/helpers';
 import ScoreBar from './ScoreBar';
 import '../styles/GameScreen.css';
 
@@ -23,7 +26,6 @@ const TOTAL = ROWS * COLS;
 const GameScreen = ({ palette }: GameScreenProps) => {
     const [showVictoryModal, setShowVictoryModal] = useState(false);
     const [victoryPlace, setVictoryPlace] = useState<number | null>(null);
-    const [clickTimestamps, setClickTimestamps] = useState<number[]>([]);
     const [ragePopup, setRagePopup] = useState(false);
     const [interactionDisabled, setInteractionDisabled] = useState(false);
     const [showEqualizerPopup, setShowEqualizerPopup] = useState(false);
@@ -47,68 +49,35 @@ const GameScreen = ({ palette }: GameScreenProps) => {
         envMoves,
         onVictory,
       });
-   
-      
-    const handleEqualizerClick = () => {
-        if (interactionDisabled) return;
-      
+
+      const onRage = useCallback(() => {
         setInteractionDisabled(true);
-        setShowEqualizerPopup(true);
-        setEnvMoves((prev) => prev + 1);
-      
-        setButtons((prev) => {
-          const evens = prev.filter((b) => b.id % 2 === 0).sort((a, b) => a.id - b.id);
-          const odds = prev.filter((b) => b.id % 2 !== 0).sort((a, b) => a.id - b.id);
-          return [...evens, ...odds];
-        });
+        setRagePopup(true);
       
         setTimeout(() => {
           setInteractionDisabled(false);
-          setShowEqualizerPopup(false);
-        }, 3141.5);
-      };
+          setRagePopup(false);
+        }, 1618);
+      }, [setInteractionDisabled, setRagePopup]);
+
+      const registerClick = useRageClickDetector(onRage);
+   
+      
+      const handleEqualizerClick = useEqualizer({
+        setButtons,
+        setEnvMoves,
+        setInteractionDisabled,
+        setShowEqualizerPopup,
+      });
 
     //  Auto-shuffle + countdown
-    useEffect(() => {
-        const shuffleInterval = setInterval(() => {
-        setButtons((prev) => shuffleArray(prev));
-        setTimeLeft(42);
-        setEnvMoves((prev) => prev + 1);
-        }, 42000);
-
-        const countdownInterval = setInterval(() => {
-        setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-        }, 1000);
-
-        return () => {
-        clearInterval(shuffleInterval);
-        clearInterval(countdownInterval);
-        };
-    }, []);
+    useAutoShuffle(setButtons, setEnvMoves, setTimeLeft);
 
     // Toggle visual button + its neighbors
     const toggleIndex = (visualIndex: number) => {
         if (interactionDisabled) return;
 
-        const now = Date.now();
-        setClickTimestamps((prev) => {
-          const recent = prev.filter((ts) => now - ts <= 2000); // keep only clicks within 2s
-          const updated = [...recent, now];
-      
-          if (updated.length >= 5) {
-            setInteractionDisabled(true);
-            setRagePopup(true);
-      
-            setTimeout(() => {
-              setInteractionDisabled(false);
-              setRagePopup(false);
-            }, 1618); // golden ratio seconds in ms
-      
-            return []; // reset click tracking after rage-lock
-          }
-      
-          return updated;
-        });
+        registerClick();
         setPlayerMoves((moves) => moves + 1);
 
         setButtons((prev) => {
@@ -125,30 +94,13 @@ const GameScreen = ({ palette }: GameScreenProps) => {
 
         toggle(visualIndex);
 
-        const row = Math.floor(visualIndex / COLS);
-        const col = visualIndex % COLS;
-
-        if ((next[visualIndex].id) % 2 === 0) {
-            if (col > 0) toggle(visualIndex - 1);
-            if (col < COLS - 1) toggle(visualIndex + 1);
-            if (row > 0) toggle(visualIndex - COLS);
-            if (row < ROWS - 1) toggle(visualIndex + COLS);
-        } else {
-            if (row > 0 && col > 0) toggle(visualIndex - COLS - 1);
-            if (row > 0 && col < COLS - 1) toggle(visualIndex - COLS + 1);
-            if (row < ROWS - 1 && col > 0) toggle(visualIndex + COLS - 1);
-            if (row < ROWS - 1 && col < COLS - 1) toggle(visualIndex + COLS + 1);
-        }
-
+        const neighbors = getNeighborIndexes(visualIndex,next[visualIndex].id,ROWS,COLS);
+        neighbors.forEach(toggle);
         return next;
         });
     };
 
-    const getScore = () => {
-        const countActive = buttons.filter((b) => b.isActive).length;
-        const countInactive = TOTAL - countActive;
-        return Math.max(countActive, countInactive);
-    };
+    
 
     const handleSaveName = (name: string) => {
         const current = loadHallOfHeroes();
@@ -171,7 +123,7 @@ const GameScreen = ({ palette }: GameScreenProps) => {
             } as React.CSSProperties
         }
         >
-        <ScoreBar score={getScore()} moves={playerMoves} total={TOTAL} />
+        <ScoreBar score={getScore(buttons)} moves={playerMoves} total={TOTAL} />
 
         <Typography variant="body1" className="shuffle-timer">Next shuffle in: {timeLeft}s</Typography>
         <Typography variant="body1" className="env-moves">Environment Moves: {envMoves}</Typography>
