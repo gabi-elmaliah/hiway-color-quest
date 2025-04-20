@@ -38,7 +38,8 @@ const GameScreen = ({ palette }: GameScreenProps) => {
         isActive: (i + 1) % 2 === 0,           // Even-numbered IDs = active
         }))
     );
-    const onVictory = useCallback((place: number) => {
+
+    const onVictory = useCallback((place: number | null) => {
         setVictoryPlace(place);
         setShowVictoryModal(true);
       }, []);
@@ -176,10 +177,12 @@ const GameScreen = ({ palette }: GameScreenProps) => {
         🧪 Force Win (DEV)
       </button>
     )}
-        {showVictoryModal && victoryPlace && (
+        {showVictoryModal &&  (
         <VictoryModal
           place={victoryPlace}
           onSave={handleSaveName}
+          playerMoves={playerMoves}
+          envMoves={envMoves}
         />
       )}
         </div>

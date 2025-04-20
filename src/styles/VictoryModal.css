@@ -49,6 +49,9 @@
     animation: blink-underscore 1s infinite;
   }
   
+  .victory-modal p:last-of-type {
+    margin-bottom: 1rem;
+  }
   .modal-buttons {
     display: flex;
     justify-content: center;

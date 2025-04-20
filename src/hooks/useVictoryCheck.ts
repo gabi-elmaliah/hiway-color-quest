@@ -5,8 +5,19 @@ type UseVictoryCheckParams = {
   buttons: { isActive: boolean }[];
   playerMoves: number;
   envMoves: number;
-  onVictory: (place: number) => void; // trigger modal with rank
+  onVictory: (place: number | null) => void; // trigger modal with rank
 };
+
+/**
+ * Custom hook that monitors the game state and detects when the player has unified the board.
+ * If the board is unified, it checks if the score qualifies for the Hall of Heroes.
+ * If so, it saves the entry and calls `onVictory` with the player's placement.
+ *
+ * @param buttons - Current button states of the board
+ * @param playerMoves - Number of moves made by the player
+ * @param envMoves - Number of moves made by the environment (auto-shuffles, etc.)
+ * @param onVictory - Callback function that triggers when the player qualifies for the leaderboard
+ */
 
 export const useVictoryCheck = ({
   buttons,
@@ -16,11 +27,12 @@ export const useVictoryCheck = ({
 }: UseVictoryCheckParams) => {
   useEffect(() => {
     if (buttons.length === 0) return;
-
+    // Check if all buttons share the same state
     const allSame = buttons.every((b) => b.isActive === buttons[0].isActive);
     if (!allSame) return;
 
     const current = loadHallOfHeroes();
+    let place: number | null = null;
 
     const newEntry: HeroEntry = { name: '', playerMoves, envMoves };
 
@@ -35,19 +47,18 @@ export const useVictoryCheck = ({
         (playerMoves === worst.playerMoves && envMoves < worst.envMoves);
     }
 
-    if (qualifies) {
+    if (qualifies) 
+      {
       const updated = addHeroEntry(newEntry); // Adds & saves
 
-      const place = updated.findIndex(
+        place = updated.findIndex(
         (e) =>
           e.playerMoves === newEntry.playerMoves &&
           e.envMoves === newEntry.envMoves &&
           e.name === ''
       ) + 1;
-
-      if (place > 0 && place <= 10) {
-        onVictory(place);
-      }
+  
     }
+    onVictory(place);
   }, [buttons]);
 };
