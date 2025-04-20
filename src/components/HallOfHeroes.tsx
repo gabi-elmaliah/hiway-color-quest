@@ -11,6 +11,13 @@ import '../styles/HallOfHeroes.css';
  * If no heroes exist yet, displays a prompt to be the first.
  * Includes a button to return to the Welcome screen.
  */
+
+const getMedal = (index: number) => {
+  if (index === 0) return '🥇';
+  if (index === 1) return '🥈';
+  if (index === 2) return '🥉';
+  return `#${index + 1}`;
+};
 const HallOfHeroes = () => {
   const heroes = loadHallOfHeroes(); // Load leaderboard data from localStorage
   const navigate = useNavigate();    
@@ -27,19 +34,19 @@ const HallOfHeroes = () => {
           No heroes yet. Be the first to inscribe your name!
         </Typography>
       ) : (
-        <Grid container spacing={3} justifyContent="center">
+        <Grid container direction="column" spacing={3} justifyContent="center">
           {heroes.map((hero, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid item key={index} className="hero-card-wrapper">
               <Card className="hero-card">
                 <CardContent>
                   <Typography variant="h5" className="hero-name">
-                    #{index + 1} – {hero.name || '???'}
+                    {getMedal(index)} – {hero.name || '???'}
                   </Typography>
                   <Typography variant="body1" className="hero-stat">
-                    🎯 Player Moves: <strong>{hero.playerMoves}</strong>
+                      Player Moves: <strong>{hero.playerMoves}</strong>
                   </Typography>
                   <Typography variant="body1" className="hero-stat">
-                    🌍 Env Moves: <strong>{hero.envMoves}</strong>
+                      Env Moves: <strong>{hero.envMoves}</strong>
                   </Typography>
                 </CardContent>
               </Card>

@@ -21,4 +21,4 @@ const ScoreBar = ({ score, moves, total }: ScoreBarProps) => {
   );
 };
 
-export default ScoreBar;
+export default React.memo(ScoreBar);
