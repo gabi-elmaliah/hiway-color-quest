@@ -20,14 +20,23 @@ const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
     const newPalettes: Palette[] = [];
   
     for (let i = 0; i < 3; i++) {
-      const randomHex = getRandomHexColor(); 
-      const url = `${COLOR_API_BASE}?hex=${randomHex}&mode=complement&count=2`;
-      // TODO: add exception handling in case we get an error from the API
-      const response = await fetch(url);
-      const data = await response.json();
-
-      const colors = data.colors.map((c: any) => c.hex.value);
-      newPalettes.push([colors[0], colors[1]]);
+      try {
+        const randomHex = getRandomHexColor();
+        const url = `${COLOR_API_BASE}?hex=${randomHex}&mode=complement&count=2`;
+        const response = await fetch(url);
+  
+        if (!response.ok) {
+          throw new Error(`Color API error: ${response.status}`);
+        }
+  
+        const data = await response.json();
+        const colors = data.colors.map((c: any) => c.hex.value);
+  
+  
+      } catch (error) {
+        const fallbackPalette: Palette = [getRandomHexColor(), getRandomHexColor()];
+        newPalettes.push(fallbackPalette);
+      }
     }
   
     setPalettes(newPalettes);
