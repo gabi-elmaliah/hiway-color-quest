@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './VictoryModal.css';
+import '../styles/VictoryModal.css';
 
 type VictoryModalProps = {
   place: number;

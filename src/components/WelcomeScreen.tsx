@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getRandomHexColor } from '../utils/color'; // utility function to generate random hex color
 import { Button,Grid,Typography, Card, CardContent } from '@mui/material';
 import '../styles/WelcomeScreen.css';
@@ -13,6 +14,7 @@ interface WelcomeScreenProps {
 
 const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
   const [palettes, setPalettes] = useState<Palette[]>([]);
+  const navigate = useNavigate();
 
   const fetchPalettes = async () => {
     const newPalettes: Palette[] = [];
@@ -47,7 +49,10 @@ const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
           {palettes.map((palette, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card
-                onClick={() => onThemeSelect(palette)}
+                 onClick={() => {
+                  onThemeSelect(palette);
+                  navigate('/game'); 
+                }}
                 className="palette-card"
                 style={{
                   background: `linear-gradient(to right, ${palette[0]} 50%, ${palette[1]} 50%)`,
@@ -70,6 +75,16 @@ const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
           onClick={fetchPalettes}
         >
           🔄 Summon Fresh Palettes
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          variant="outlined"
+          className="hall-of-heroes-button"
+          onClick={() => navigate('/hall-of-heroes')}
+          sx={{ mt: 2 }}
+        >
+          🏆 View Hall of Heroes
         </Button>
       </Grid>
     </Grid>

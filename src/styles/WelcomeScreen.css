@@ -5,11 +5,26 @@
     transition: transform 0.2s ease-in-out;
   }
 
-  .palette-card:hover {
+.palette-card:hover {
     transform: scale(1.05);
   }
 
-  /* We'll use CSS variables for dynamic background */
-.palette-card-bg {
-    background: linear-gradient(45deg, var(--color1), var(--color2));
+  .hall-of-heroes-button {
+    animation: pulse 2s infinite;
+    font-size: 16px;
+    padding: 10px 24px;
+    margin-top: 16px;
+    border-radius: 8px;
+    background-color: #03a9f4; /* Light blue */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
   }
+  
+  .hall-of-heroes-button:hover {
+    background-color: #0288d1;
+    transform: scale(1.05);
+  }
+  
