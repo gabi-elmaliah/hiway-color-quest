@@ -24,7 +24,6 @@ git clone https://github.com/gabi-elmaliah/hiway-color-quest.git
 cd color-quest
 ```
 
-
 ### 2. Install dependencies
 
 ```bash
@@ -40,5 +39,16 @@ npm run dev
 Then open http://localhost:5173 in your browser.
 
 ---
+
+## 📸 Screenshots
+
+### 🎨 Welcome Screen
+![Welcome Screen](./public/Screenshot%202025-04-20%20180947.png)
+
+### 🕹️ Game Board
+![Game Screen](./public/Screenshot%202025-04-20%20181007.png)
+
+### 👑 Hall of Heroes
+![Hall of Heroes](./public/Screenshot%202025-04-20%20181035.png)
 
 Enjoy the game and may your logic lead you to glory! 🏆
