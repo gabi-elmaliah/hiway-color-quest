@@ -1,0 +1,76 @@
+.hall-container {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+  }
+  .hero-card {
+    animation: fadeInUp 0.4s ease forwards;
+  }
+
+.trophy-emoji {
+    display: inline-block;
+    animation: bounce 1.2s ease-in-out infinite;
+    text-shadow: 0 0 8px gold;
+  }
+  
+  /* Reuse or define a simple bounce */
+@keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  
+ 
+.hero-card-wrapper {
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  .hall-title {
+    font-family: 'monospace';
+    font-weight: bold;
+    color: #ffd700;
+    margin-bottom: 2rem;
+  }
+  
+  .no-heroes-text {
+    margin-top: 2rem;
+
+    color: #aaa;
+  }
+  
+  .hero-card {
+    background-color: #1e1e1e;
+    color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    transition: transform 0.2s ease;
+  }
+  
+  .hero-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .hero-name {
+    color: #ffd700;
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+  }
+  
+  .hero-stat {
+    margin-bottom: 0.4rem;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

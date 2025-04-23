@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getRandomHexColor } from '../utils/color'; // utility function to generate random hex color
+import { useNavigate } from 'react-router-dom';
+import { getRandomHexColor } from '../utils/helpers'; // utility function to generate random hex color
 import { Button,Grid,Typography, Card, CardContent } from '@mui/material';
 import '../styles/WelcomeScreen.css';
 const COLOR_API_BASE = "https://www.thecolorapi.com/scheme";
@@ -13,40 +14,62 @@ interface WelcomeScreenProps {
 
 const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
   const [palettes, setPalettes] = useState<Palette[]>([]);
+  const navigate = useNavigate();
 
+   /**
+   * Fetch 3 complementary color palettes from the external color API.
+   * If API fails, fallback palettes are generated randomly.
+   */
   const fetchPalettes = async () => {
     const newPalettes: Palette[] = [];
   
     for (let i = 0; i < 3; i++) {
-      const randomHex = getRandomHexColor(); 
-      const url = `${COLOR_API_BASE}?hex=${randomHex}&mode=complement&count=2`;
-      const response = await fetch(url);
-      const data = await response.json();
+      try {
+        const randomHex = getRandomHexColor();
+        const url = `${COLOR_API_BASE}?hex=${randomHex}&mode=complement&count=2`;
+        const response = await fetch(url);
+  
+        if (!response.ok) {
+          throw new Error(`Color API error: ${response.status}`);
+        }
+  
+        const data = await response.json();
+        const colors = data.colors.map((c: any) => c.hex.value);
 
-      const colors = data.colors.map((c: any) => c.hex.value);
-      newPalettes.push([colors[0], colors[1]]);
+        newPalettes.push([colors[0], colors[1]]);
+  
+  
+      } catch (error) {
+        const fallbackPalette: Palette = [getRandomHexColor(), getRandomHexColor()];
+        newPalettes.push(fallbackPalette);
+      }
     }
   
     setPalettes(newPalettes);
   };
-
+  // Initial fetch on mount
   useEffect(() => { 
     fetchPalettes();
   }, []);
 
   return (
     <Grid container spacing={2} direction="column" alignItems="center">
-      {/* Title */}
     
-      <Typography variant="h3" gutterBottom>
-          🎨 Start Your Adventure
-      </Typography>
+        <Typography variant="h1" className="logo-emoji">
+         🎨
+        </Typography>
+        <Typography variant="h3" gutterBottom>
+          Start Your Adventure
+        </Typography>
   
         <Grid container spacing={2} justifyContent="center">
           {palettes.map((palette, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card
-                onClick={() => onThemeSelect(palette)}
+                 onClick={() => {
+                  onThemeSelect(palette);
+                  navigate('/game'); 
+                }}
                 className="palette-card"
                 style={{
                   background: `linear-gradient(to right, ${palette[0]} 50%, ${palette[1]} 50%)`,
@@ -69,6 +92,16 @@ const WelcomeScreen = ({ onThemeSelect }: WelcomeScreenProps) => {
           onClick={fetchPalettes}
         >
           🔄 Summon Fresh Palettes
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          variant="outlined"
+          className="hall-of-heroes-button"
+          onClick={() => navigate('/hall-of-heroes')}
+          sx={{ mt: 2 }}
+        >
+          🏆 View Hall of Heroes
         </Button>
       </Grid>
     </Grid>

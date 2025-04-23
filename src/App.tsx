@@ -1,17 +1,43 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import WelcomeScreen from './components/WelcomeScreen';
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import GameScreen from './components/GameScreen';
+import HallOfHeroes from './components/HallOfHeroes';
+import './App.css';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedPalette, setSelectedPalette] = useState<[string, string] | null>(null);
 
   return (
-    <div>
-      <WelcomeScreen onThemeSelect={(palette) => console.log('Selected:', palette)} />
-    </div>
+    <BrowserRouter>
+      <div className="app-container">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <WelcomeScreen
+                onThemeSelect={(palette) => setSelectedPalette(palette)}
+              />
+            }
+          />
+          <Route
+            path="/game"
+            element={
+              selectedPalette ? (
+                <GameScreen palette={selectedPalette} />
+              ) : (
+                <div className="fallback-message">
+                  <h2>Please select a theme from the Welcome screen first.</h2>
+                </div>
+              )
+            }
+          />
+          <Route path="/hall-of-heroes" element={<HallOfHeroes />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
-export default App
+export default App;
