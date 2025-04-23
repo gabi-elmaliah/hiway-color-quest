@@ -26,7 +26,6 @@ export const useVictoryCheck = ({
   onVictory,
 }: UseVictoryCheckParams) => {
   useEffect(() => {
-    if (buttons.length === 0) return;
     // Check if all buttons share the same state
     const allSame = buttons.every((b) => b.isActive === buttons[0].isActive);
     if (!allSame) return;

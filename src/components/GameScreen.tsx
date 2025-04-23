@@ -79,13 +79,15 @@ const GameScreen = ({ palette }: GameScreenProps) => {
   /**
    * Handles a grid button click, toggles the button and its neighbors.
    */
-  const toggleIndex = (visualIndex: number) => {
+  const toggleIndex = (visualIndex: number) => 
+    {
     if (interactionDisabled) return;
 
     registerClick();
     setPlayerMoves((prev) => prev + 1);
 
-    setButtons((prev) => {
+    setButtons((prev) => 
+      {
       const next = [...prev];
 
       const toggle = (i: number) => {
@@ -144,7 +146,7 @@ const GameScreen = ({ palette }: GameScreenProps) => {
         Environment Moves: {envMoves}
       </Typography>
 
-      {/* Equalizer Button */}
+    
       <div className="equalizer-section">
         <button
           className="great-equalizer"
@@ -165,7 +167,7 @@ const GameScreen = ({ palette }: GameScreenProps) => {
         )}
       </div>
 
-      {/* Game Grid */}
+     
       <div className="game-screen">
         {buttons.map((button, visualIndex) => (
           <Tooltip
@@ -189,7 +191,7 @@ const GameScreen = ({ palette }: GameScreenProps) => {
         Back to Home Page
       </button>
 
-      {/* Victory Modal */}
+      
       {showVictoryModal && (
         <VictoryModal
           place={victoryPlace}

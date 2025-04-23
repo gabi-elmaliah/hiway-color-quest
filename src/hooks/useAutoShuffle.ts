@@ -29,5 +29,5 @@ export const useAutoShuffle = (
       clearInterval(shuffleInterval);
       clearInterval(countdownInterval);
     };
-  }, [setButtons, setEnvMoves, setTimeLeft]);
+  }, []);
 };
